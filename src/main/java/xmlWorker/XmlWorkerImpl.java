@@ -21,14 +21,17 @@ import java.util.Map;
 
 
 public class XmlWorkerImpl implements XmlWorker{
+
     public void write(List<Table> tables, String path){
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(true);
             Document doc = factory.newDocumentBuilder().newDocument();
 
-            for (Table table : tables){
-                doc.appendChild(getTableElement(doc, table));
+            if (tables != null && !tables.isEmpty()){
+                for (Table table : tables){
+                    doc.appendChild(getTableElement(doc, table));
+                }
             }
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -122,15 +125,19 @@ public class XmlWorkerImpl implements XmlWorker{
         count.appendChild(doc.createTextNode(column.getCount().toString()));
         columnElement.appendChild(count);
 
-        Element listOfRareValues = doc.createElement("listOfRareValues");
-        for (Object value : column.getListOfRareValues()){
-            Element valueElement = doc.createElement("value");
-            valueElement.appendChild(doc.createTextNode(value.toString()));
-            listOfRareValues.appendChild(valueElement);
+        if (column.getListOfRareValues() != null && !column.getListOfRareValues().isEmpty()){
+            Element listOfRareValues = doc.createElement("listOfRareValues");
+            for (Object value : column.getListOfRareValues()){
+                Element valueElement = doc.createElement("value");
+                valueElement.appendChild(doc.createTextNode(value.toString()));
+                listOfRareValues.appendChild(valueElement);
+            }
+            columnElement.appendChild(listOfRareValues);
         }
-        columnElement.appendChild(listOfRareValues);
 
-        columnElement.appendChild(getHistogramElement(doc, column.getHistogram()));
+        if (column.getHistogram() != null){
+            columnElement.appendChild(getHistogramElement(doc, column.getHistogram()));
+        }
 
         return columnElement;
     }
@@ -151,8 +158,10 @@ public class XmlWorkerImpl implements XmlWorker{
         tableElement.appendChild(rowCount);
 
         //add columns
-        for (Map.Entry<String, Column> column : table.getColumns().entrySet()){
-            tableElement.appendChild(getColumnElement(doc, column.getValue()));
+        if (table.getColumns() != null && !table.getColumns().isEmpty()){
+            for (Map.Entry<String, Column> column : table.getColumns().entrySet()){
+                tableElement.appendChild(getColumnElement(doc, column.getValue()));
+            }
         }
         return tableElement;
     }
