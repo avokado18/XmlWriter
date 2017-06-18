@@ -14,6 +14,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -154,4 +156,23 @@ public class XmlWorkerImpl implements XmlWorker{
         }
         return tableElement;
     }
+
+
+//    @RequestMapping(path = "/download", method = RequestMethod.GET)
+//    public ResponseEntity<InputStreamResource> download() throws IOException {
+//
+//        File file = new File("C:\\Users\\1\\Desktop\\Prog\\ДИПЛОМ\\Sasha\\src\\main\\resources\\file.xml");
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+//        headers.add("Pragma", "no-cache");
+//        headers.add("Expires", "0");
+//
+//        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+//
+//        return ResponseEntity.ok()
+//                .headers(headers)
+//                .contentLength(file.length())
+//                .contentType(MediaType.parseMediaType("application/octet-stream"))
+//                .body(resource);
+//    }
 }

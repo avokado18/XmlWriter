@@ -17,7 +17,6 @@ public class Table {
                 "\n}\n";
     }
 
-
     public void setPK(String name){
         columns.get(name).setPrimary(true);
     }
