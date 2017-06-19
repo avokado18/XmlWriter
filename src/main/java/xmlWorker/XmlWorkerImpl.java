@@ -8,7 +8,14 @@ import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -162,33 +169,40 @@ public class XmlWorkerImpl implements XmlWorker{
     }
 
 
-//@RequestMapping(path = "/download", method = RequestMethod.GET)
-//public ResponseEntity<InputStreamResource> download() throws IOException {
-//    try {
-//        XmlWorker xmlWorker = new XmlWorker();
-//        DOMSource source = xmlWorker.write();
-//        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-//        Transformer transformer = transformerFactory.newTransformer();
-//        File file = new File("C:\\Users\\1\\Desktop\\Prog\\ДИПЛОМ\\Sasha\\src\\main\\resources\\file.xml");
-//        StreamResult result = new StreamResult(file);
-//        transformer.transform(source, result);
+//    @RequestMapping(path = "/download", method = RequestMethod.GET)
+//    public ResponseEntity<InputStreamResource> download() throws IOException {
+//        File file = null;
+//        try {
+//            XmlWorker xmlWorker = new XmlWorker();
+//            DOMSource source = xmlWorker.write();
+//            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+//            Transformer transformer = transformerFactory.newTransformer();
+////            file = new File("./file.xml");
+//            file = File.createTempFile("file",".xml");
+//            file.deleteOnExit();
+//            StreamResult result = new StreamResult(file);
+//            transformer.transform(source, result);
 //
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-//        headers.add("Pragma", "no-cache");
-//        headers.add("Expires", "0");
-//        headers.add("Content-disposition", "attachment; filename="+ file.getName());
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+//            headers.add("Pragma", "no-cache");
+//            headers.add("Expires", "0");
+//            headers.add("Content-disposition", "attachment; filename="+ file.getName());
 //
-//        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+//            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
 //
-//        return ResponseEntity.ok()
-//                .headers(headers)
-//                .contentLength(file.length())
-//                .contentType(MediaType.parseMediaType("application/octet-stream"))
-//                .body(resource);
-//    }catch (TransformerException ex){
-//        ex.printStackTrace();
+//            return ResponseEntity.ok()
+//                    .headers(headers)
+//                    .contentLength(file.length())
+//                    .contentType(MediaType.parseMediaType("application/octet-stream"))
+//                    .body(resource);
+//        }catch (TransformerException ex){
+//            file.delete();
+//            ex.printStackTrace();
+//        }
+//        finally {
+//            file.delete();
+//        }
+//        return null;
 //    }
-//    return null;
-//}
 }
