@@ -8,19 +8,14 @@ import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 
 public class XmlWorkerImpl implements XmlWorker{
 
-    public void write(List<Table> tables, String path){
+    public DOMSource write(List<Table> tables, String path){
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(true);
@@ -32,17 +27,19 @@ public class XmlWorkerImpl implements XmlWorker{
                 }
             }
 
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File(path));
-            transformer.transform(source, result);
+//            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+//            Transformer transformer = transformerFactory.newTransformer();
+            return new DOMSource(doc);
+//            StreamResult result = new StreamResult(new File(path));
+//            transformer.transform(source, result);
 
-        } catch (ParserConfigurationException ex){
+        } catch (ParserConfigurationException ex) {
             ex.printStackTrace();
-        } catch (TransformerException tex){
-            tex.printStackTrace();
         }
+//        } catch (TransformerException tex){
+//            tex.printStackTrace();
+//        }
+        return new DOMSource();
     }
 
     private Element getHistogramElement(Document doc, Histogram histogram){
@@ -165,14 +162,22 @@ public class XmlWorkerImpl implements XmlWorker{
     }
 
 
-//    @RequestMapping(path = "/download", method = RequestMethod.GET)
-//    public ResponseEntity<InputStreamResource> download() throws IOException {
-//
+//@RequestMapping(path = "/download", method = RequestMethod.GET)
+//public ResponseEntity<InputStreamResource> download() throws IOException {
+//    try {
+//        XmlWorker xmlWorker = new XmlWorker();
+//        DOMSource source = xmlWorker.write();
+//        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+//        Transformer transformer = transformerFactory.newTransformer();
 //        File file = new File("C:\\Users\\1\\Desktop\\Prog\\ДИПЛОМ\\Sasha\\src\\main\\resources\\file.xml");
+//        StreamResult result = new StreamResult(file);
+//        transformer.transform(source, result);
+//
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
 //        headers.add("Pragma", "no-cache");
 //        headers.add("Expires", "0");
+//        headers.add("Content-disposition", "attachment; filename="+ file.getName());
 //
 //        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
 //
@@ -181,5 +186,9 @@ public class XmlWorkerImpl implements XmlWorker{
 //                .contentLength(file.length())
 //                .contentType(MediaType.parseMediaType("application/octet-stream"))
 //                .body(resource);
+//    }catch (TransformerException ex){
+//        ex.printStackTrace();
 //    }
+//    return null;
+//}
 }
