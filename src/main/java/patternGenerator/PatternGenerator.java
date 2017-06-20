@@ -114,13 +114,14 @@ public class PatternGenerator {
                     countRegex.put(regexp, 1);
                 }
             } else {
+                //generate firstly
                 regexp = generateRegexpFrom(words[i]);
                 if (countRegex.containsKey(regexp)){
                     countRegex.put(regexp, countRegex.get(regexp) + 1);
                 } else {
                     countRegex.put(regexp, 1);
                 }
-
+                //check before generate
 //                boolean found = false;
 //                for (Map.Entry<String, Integer> entry : countRegex.entrySet()){
 //                    if (Pattern.matches(entry.getKey(), words[i])){
