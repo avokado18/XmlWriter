@@ -4,9 +4,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class PatternGenerator {
-    public static Pattern generateRegexp(String prototype) {
-        return Pattern.compile(generateRegexpFrom(prototype));
-    }
+    private final static String patternForGUID = "\\w{8}-\\w{4}-\\w{4}-\\w{4}-\\w{12}";
 
     private static String generateRegexpFrom(String prototype) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -81,19 +79,60 @@ public class PatternGenerator {
                 }
             }
         }
+        String tryRussian = stringBuilder.toString().replaceAll(Pattern.quote("\\w"), "[а-яА-ЯёЁ]");
+        String tryEnglish = stringBuilder.toString().replaceAll(Pattern.quote("\\w"), "[a-zA-Z]");
+        String tryBoth = stringBuilder.toString().replaceAll(Pattern.quote("\\w"), "[а-яА-ЯёЁa-zA-Z]");
+        if (Pattern.matches(tryEnglish, prototype)){
+            return tryEnglish;
+        }
+        if (Pattern.matches(tryRussian, prototype)){
+            return tryRussian;
+        }
+        if (Pattern.matches(tryBoth, prototype)){
+            return tryBoth;
+        }
+
         return stringBuilder.toString();
     }
 
     private static Map<String, Integer> getAllRegex(String[] words){
         Map<String, Integer> countRegex = new HashMap<String, Integer>();
-        String regexp = generateRegexpFrom(words[0]);
+        String regexp;
+        if (Pattern.matches(patternForGUID, words[0])){
+            regexp = patternForGUID;
+        } else {
+            regexp = generateRegexpFrom(words[0]);
+        }
         countRegex.put(regexp, 1);
         for (int i = 1; i < words.length; i++){
-            String currentRegexp = generateRegexpFrom(words[i]);
-            if (countRegex.containsKey(currentRegexp)){
-                countRegex.put(currentRegexp, countRegex.get(currentRegexp) + 1);
+            regexp = "";
+            if (Pattern.matches(patternForGUID, words[i])){
+                regexp = patternForGUID;
+                if (countRegex.containsKey(regexp)){
+                    countRegex.put(regexp, countRegex.get(regexp) + 1);
+                } else {
+                    countRegex.put(regexp, 1);
+                }
             } else {
-                countRegex.put(currentRegexp, 1);
+                regexp = generateRegexpFrom(words[i]);
+                if (countRegex.containsKey(regexp)){
+                    countRegex.put(regexp, countRegex.get(regexp) + 1);
+                } else {
+                    countRegex.put(regexp, 1);
+                }
+
+//                boolean found = false;
+//                for (Map.Entry<String, Integer> entry : countRegex.entrySet()){
+//                    if (Pattern.matches(entry.getKey(), words[i])){
+//                        entry.setValue(entry.getValue() + 1);
+//                        found = true;
+//                        break;
+//                    }
+//                }
+//                if (!found){
+//                    regexp = generateRegexpFrom(words[i]);
+//                    countRegex.put(regexp, 1);
+//                }
             }
         }
         return countRegex;
@@ -101,13 +140,18 @@ public class PatternGenerator {
 
     public static void main(String[] args) {
         String[] prototypes = {
+                "1fgh21t2-4g3h-65hj-tyu4-rty123ghj456",
+                "1fgh21t2-4g3h-65hj-tyu4-rty123ghj456",
                 "qwe@dfg.com",
                 "qwe@qwe.com",
                 "2009/11/12",
                 "I'm a test",
                 "me too!!!",
                 "124.323.232.112",
-                "ISBN      332212"
+                "ISBN      332212",
+                "апркен123",
+                "dgdfкенertлрдлрtr45лил",
+                "qwe23фыв"
         };
 
         System.out.println(getAllRegex(prototypes));
